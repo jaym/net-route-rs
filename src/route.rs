@@ -50,6 +50,38 @@ fn parse_ip(s: &str) -> Result<Ipv4Addr, RouteError> {
     }
 }
 
+#[test]
+fn parse_ip_returns_error_for_bad_input_0_length() {
+    match parse_ip("000000") {
+        Err(RouteError::BadInput) => (),
+        otherwise => panic!("Expected RouteError::BadInput, got #{:?}", otherwise)
+    }
+}
+
+#[test]
+fn parse_ip_returns_error_for_bad_input_length_short() {
+    match parse_ip("000000") {
+        Err(RouteError::BadInput) => (),
+        otherwise => panic!("Expected RouteError::BadInput, got #{:?}", otherwise)
+    }
+}
+
+
+#[test]
+fn parse_ip_returns_error_for_bad_input_length_long() {
+    match parse_ip("0000000000") {
+        Err(RouteError::BadInput) => (),
+        otherwise => panic!("Expected RouteError::BadInput, got #{:?}", otherwise)
+    }
+}
+
+#[test]
+fn parse_ip_returns_parse_error_for_bad_input_length_bad_character() {
+    match parse_ip("000foo00") {
+        Err(RouteError::Parse(_)) => (),
+        otherwise => panic!("Expected RouteError::BadInput, got #{:?}", otherwise)
+    }
+}
 
 #[test]
 fn it_works() {
