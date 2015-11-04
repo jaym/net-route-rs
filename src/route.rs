@@ -19,6 +19,10 @@ pub fn load() -> Result<Vec<Route>, RouteError> {
     let f = try!(File::open("/proc/net/route"));
     let reader = BufReader::new(f);
 
+    parse_proc_net_route(reader)
+}
+
+fn parse_proc_net_route<T: BufRead>(reader: T) -> Result<Vec<Route>, RouteError> {
     // The first line is a header, we don't need it
     reader.lines().skip(1).map(|wrapped_line| {
         let line = try!(wrapped_line);
@@ -49,6 +53,7 @@ fn parse_ip(s: &str) -> Result<Ipv4Addr, RouteError> {
         Ok(Ipv4Addr::new(vec[3], vec[2], vec[1], vec[0]))
     }
 }
+
 
 #[test]
 fn parse_ip_returns_error_for_bad_input_0_length() {
